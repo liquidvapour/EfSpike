@@ -32,8 +32,10 @@ public class SalesController : ControllerBase
         var customer = await _salesContext.Customers.FindAsync(invoice.CustomerId);
         if (customer == null)
         {
-            customer = new Customer { };
-            _salesContext.Add(customer);
+            return BadRequest(new ProblemDetails
+            {
+                Title = "No Customer found",
+            });
         }
 
         var invoiceData = new Invoice
