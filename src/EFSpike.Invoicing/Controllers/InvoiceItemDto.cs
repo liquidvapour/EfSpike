@@ -1,3 +1,3 @@
 namespace EFSpike.Invoicing.Controllers;
 
-public record InvoiceItemDto(int Id);
+public record InvoiceItemDto(int Id, int Quantity, string ProductCode);
