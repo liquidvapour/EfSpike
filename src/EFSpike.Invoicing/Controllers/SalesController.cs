@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFSpike.Invoicing.Controllers;
 
@@ -17,7 +18,7 @@ public class SalesController : ControllerBase
     public Task<IActionResult> Index()
     {
         var invoices = _salesContext.Invoices.Select(x =>
-            new InvoiceDto(
+            new PutInvoiceRequest(
                 x.Id!.Value,
                 x.Customer.Id,
                 x.Items.Select(y => new InvoiceItemDto(y.Id!.Value, y.Quantity, y.ProductCode)).ToArray()));
@@ -25,21 +26,56 @@ public class SalesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Index(InvoiceDto invoice)
+    public async Task<IActionResult> Index(PutInvoiceRequest invoice)
     {
-        var customer = new Customer { };
-        _salesContext.Add(customer);
-        _salesContext.Add(new Invoice
+        
+        var customer = await _salesContext.Customers.FindAsync(invoice.CustomerId);
+        if (customer == null)
+        {
+            customer = new Customer { };
+            _salesContext.Add(customer);
+        }
+
+        var invoiceData = new Invoice
         {
             Customer = customer,
             Items = invoice.items.Select(x =>
                     new InvoiceItem
                     {
+                        Id = x.Id,
                         ProductCode = x.ProductCode,
                         Quantity = x.Quantity
                     })
                 .ToList()
-        });
+        };
+        if (invoice.Id is null)
+        {
+            _salesContext.Add(invoiceData);
+        }
+        else
+        {
+            var existingInvoiceData = await _salesContext.Invoices
+                .Include(x => x.Items)
+                .FirstOrDefaultAsync(x => x.Id == invoice.Id);
+
+            existingInvoiceData.Customer = customer;
+            var itemsToAdd = new List<InvoiceItem>();
+            foreach (var item in invoiceData.Items)
+            {
+                var oldItem = existingInvoiceData.Items.FirstOrDefault(x => x.Id == item.Id);
+                if (oldItem != null)
+                {
+                    oldItem.ProductCode = item.ProductCode;
+                    oldItem.Quantity = item.Quantity;
+                }
+                else
+                {
+                    itemsToAdd.Add(item);
+                }
+            }
+            existingInvoiceData.Items.AddRange(itemsToAdd);
+        }
+        
         await _salesContext.SaveChangesAsync();
         return Ok(new { InvoiceNumber = 1 });
     }
