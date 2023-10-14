@@ -16,7 +16,11 @@ public class SalesController : ControllerBase
     [HttpGet()]
     public Task<IActionResult> Index()
     {
-        return Task.FromResult<IActionResult>(Ok(new { InvoiceNumber = 1 }));
+        var invoices = _salesContext.Invoices.Select(x => 
+            new InvoiceDto(
+                x.Customer.Id, 
+                x.Items.Select(y => new InvoiceItemDto(y.Id!.Value)).ToArray());
+        return Task.FromResult<IActionResult>(Ok(new { Invoices = invoices }));
     }
 
     [HttpPost()]
