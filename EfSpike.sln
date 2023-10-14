@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BD792A03-E16A-4EA5-B7C9-AB7C1930FCC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFSpike.Invoice", "src\EFSpike.Invoice\EFSpike.Invoice.csproj", "{167C3F4B-48DC-450B-9420-C40FF54B60C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFSpike.Invoicing", "src\EFSpike.Invoicing\EFSpike.Invoicing.csproj", "{167C3F4B-48DC-450B-9420-C40FF54B60C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
