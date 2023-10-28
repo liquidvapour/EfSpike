@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EFSpike.Controllers;
 
-public class InvoiceController : ControllerBase
+public class InvoiceController : Controller
 {
-    public Task<IActionResult> Index()
+    public ActionResult Index()
     {
         return View();
     }
