@@ -3,8 +3,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EFSpike.Invoicing.Controllers;
 
+public record GetInvoicesResponseDto(GetInvoiceResponseDto[] Invoices)
+{
+    public override string ToString()
+    {
+        return $"{{ Invoices = {Invoices} }}";
+    }
+}
+
+
 [ApiController]
 [Route("[controller]")]
+[Produces("application/json")]
 public class SalesController : ControllerBase
 {
     private readonly SalesContext _salesContext;
@@ -14,19 +24,27 @@ public class SalesController : ControllerBase
         _salesContext = salesContext;
     }
 
+
     [HttpGet]
-    public Task<IActionResult> Index()
+    [ProducesResponseType(typeof(GetInvoicesResponseDto), 200, "application/json")]
+    public async Task<IActionResult> Index()
     {
-        var invoices = _salesContext.Invoices.Select(x =>
-            new PutInvoiceRequest(
-                x.Id!.Value,
-                x.Customer.Id,
-                x.Items.Select(y => new InvoiceItemDto(y.Id!.Value, y.Quantity, y.ProductCode)).ToArray()));
-        return Task.FromResult<IActionResult>(Ok(new { Invoices = invoices }));
+        return Ok(await GetInvoicesResponse());
     }
 
+    private async Task<GetInvoicesResponseDto> GetInvoicesResponse() =>
+        new(
+            await _salesContext.Invoices.Select(x =>
+                new GetInvoiceResponseDto(
+                    x.Id!.Value,
+                    x.Customer.Id,
+                    x.Items.Select(y => new GetInvoiceItemResponseDto(
+                        y.Id!.Value,
+                        y.Quantity,
+                        y.ProductCode)).ToArray())).ToArrayAsync());
+
     [HttpPost]
-    public async Task<IActionResult> Index(PutInvoiceRequest invoice)
+    public async Task<IActionResult> Index(PutInvoiceRequestDto invoice)
     {
         
         var customer = await _salesContext.Customers.FindAsync(invoice.CustomerId);
