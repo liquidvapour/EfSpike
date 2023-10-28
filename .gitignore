@@ -477,3 +477,5 @@ $RECYCLE.BIN/
 *.lnk
 
 .idea/
+src/EFSpike.Invoicing/wwwroot/lib/ 
+src/EFSpike.Invoicing/wwwroot/dist/
