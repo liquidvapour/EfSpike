@@ -8,4 +8,6 @@ public class Create : PageModel
     {
         
     }
+    
+    public Controllers.Invoice Invoice { get; set; }
 }
