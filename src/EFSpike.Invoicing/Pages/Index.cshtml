@@ -10,5 +10,8 @@
         <a asp-page="/Create">Create New</a>
 </p>
 <ul>
-    <li></li>
+    @foreach (var invoice in Model.Invoice)
+    {
+        <li>@invoice.Id <a asp-page="./Edit" asp-route-id="@invoice.Id">Edit</a></li>
+    }
 </ul>
