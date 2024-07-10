@@ -1,6 +1,6 @@
-using EFSpike.Invoicing.Controllers;
+using EFSpike.Invoicing.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 
 namespace EFSpike.Invoicing.Views.Invoice;
 
@@ -12,11 +12,30 @@ public class Create : PageModel
     {
         _context = context;
     }
+
+    public void OnPost([FromForm]InvoiceDto invoice)
+    {
+        
+    }
     
     public void OnGet()
     {
-        Invoice = new Controllers.Invoice();
+        Invoice = new InvoiceDto(
+            123,
+            "CUST123",
+            new []
+            {
+                new InvoiceItemDto(
+                    456, 
+                    1,
+                    "PRD",
+                    new decimal(2.33))
+            });
     }
     
-    public Controllers.Invoice Invoice { get; set; }
+    public InvoiceDto Invoice { get; set; }
 }
+
+public record InvoiceDto(int Id, string CustomerNumber, InvoiceItemDto[] Items);
+
+public record InvoiceItemDto(int Id, int Quantity, string ProductCode, decimal Price);

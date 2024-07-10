@@ -1,4 +1,6 @@
-namespace EFSpike.Invoicing.Controllers;
+using EFSpike.Invoicing.Controllers;
+
+namespace EFSpike.Invoicing.Data;
 
 public class Invoice
 {

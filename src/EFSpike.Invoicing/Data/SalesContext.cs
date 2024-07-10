@@ -1,6 +1,7 @@
+using EFSpike.Invoicing.Controllers;
 using Microsoft.EntityFrameworkCore;
 
-namespace EFSpike.Invoicing.Controllers;
+namespace EFSpike.Invoicing.Data;
 
 public class SalesContext : DbContext
 {

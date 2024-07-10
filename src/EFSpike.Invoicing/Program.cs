@@ -1,4 +1,5 @@
 using EFSpike.Invoicing.Controllers;
+using EFSpike.Invoicing.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

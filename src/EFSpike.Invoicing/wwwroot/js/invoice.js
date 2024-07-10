@@ -9,7 +9,7 @@ const createInvoice = (invoiceItems) => new Vue({
             this.invoiceItems.push({Description: '', Quantity: 1, UnitPrice: 0.00});
             
         },
-        removeItem: function (index) {
+        removeItem: function (event, index) {
             event.preventDefault();
             this.invoiceItems.splice(index, 1);
         }

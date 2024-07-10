@@ -1,4 +1,4 @@
-namespace EFSpike.Invoicing.Controllers;
+namespace EFSpike.Invoicing.Data;
 
 public class Customer
 {

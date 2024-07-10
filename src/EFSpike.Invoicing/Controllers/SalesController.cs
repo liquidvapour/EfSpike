@@ -1,3 +1,4 @@
+using EFSpike.Invoicing.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,6 @@ public record GetInvoicesResponseDto(GetInvoiceResponseDto[] Invoices)
         return $"{{ Invoices = {Invoices} }}";
     }
 }
-
 
 [ApiController]
 [Route("[controller]")]
@@ -38,15 +38,17 @@ public class SalesController : ControllerBase
                 new GetInvoiceResponseDto(
                     x.Id!.Value,
                     x.Customer.Id,
-                    x.Items.Select(y => new GetInvoiceItemResponseDto(
-                        y.Id!.Value,
-                        y.Quantity,
-                        y.ProductCode)).ToArray())).ToArrayAsync());
+                    x.Items.Select(y =>
+                        new GetInvoiceItemResponseDto(
+                            y.Id!.Value,
+                            y.ProductCode,
+                            y.Quantity,
+                            y.Price,
+                            y.LinePrice)).ToArray())).ToArrayAsync());
 
     [HttpPost]
     public async Task<IActionResult> Index(PutInvoiceRequestDto invoice)
     {
-        
         var customer = await _salesContext.Customers.FindAsync(invoice.CustomerId);
         if (customer == null)
         {
@@ -56,7 +58,7 @@ public class SalesController : ControllerBase
             });
         }
 
-        var invoiceData = new Invoice
+        var invoiceData = new Data.Invoice
         {
             Customer = customer,
             Items = invoice.items.Select(x =>
@@ -93,9 +95,10 @@ public class SalesController : ControllerBase
                     itemsToAdd.Add(item);
                 }
             }
+
             existingInvoiceData.Items.AddRange(itemsToAdd);
         }
-        
+
         await _salesContext.SaveChangesAsync();
         return Ok(new { InvoiceNumber = 1 });
     }

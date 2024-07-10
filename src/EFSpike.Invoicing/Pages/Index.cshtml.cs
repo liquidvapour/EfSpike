@@ -1,4 +1,5 @@
 using EFSpike.Invoicing.Controllers;
+using EFSpike.Invoicing.Data;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,7 +13,7 @@ public class Index : PageModel
         _context = context;
     }
     
-    public List<Controllers.Invoice>? Invoice { get; set; }
+    public List<Data.Invoice>? Invoice { get; set; }
     
     public async Task OnGet()
     {

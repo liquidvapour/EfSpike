@@ -26,16 +26,16 @@
                 <tbody>
                 <tr v-for="(item, index) in invoiceItems" :key="index">
                     <td>
-                        <input type="text" v-model="item.Description" :name="`InvoiceItems[${index}].Description`">
+                        <input type="text" v-model="item.Description" :name="`Items[${index}].Description`">
                     </td>
                     <td>
-                        <input type="number" v-model="item.Quantity" :name="`InvoiceItems[${index}].Quantity`">
+                        <input type="number" v-model="item.Quantity" :name="`Items[${index}].Quantity`">
                     </td>
                     <td>
-                        <input type="number" v-model="item.UnitPrice" :name="`InvoiceItems[${index}].UnitPrice`">
+                        <input type="number" v-model="item.UnitPrice" :name="`Items[${index}].Price`">
                     </td>
                     <td>
-                        <button @@click="removeItem(index)">Remove</button>
+                        <button @@click="(event) => removeItem(event, index)">Remove</button>
                     </td>
                 </tr>
                 
